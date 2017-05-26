@@ -15,7 +15,7 @@ using Sitecore;
 
 namespace Sitecore.Support.Pipelines.HttpRequest
 {
-    public class ExecuteRequest : HttpRequestProcessor
+    public class ExecuteRequest : Sitecore.Pipelines.HttpRequest.ExecuteRequest
     {
         /// <summary>
         /// Runs the processor.
@@ -55,73 +55,6 @@ namespace Sitecore.Support.Pipelines.HttpRequest
                 }
                 this.HandleLayoutNotFound(args);
             }
-        }
-
-        /// <summary>
-        /// Redirects to login page.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void RedirectToLoginPage(string url)
-        {
-            UrlString urlString = new UrlString(url);
-            if (string.IsNullOrEmpty(urlString["returnUrl"]))
-            {
-                urlString["returnUrl"] = WebUtil.GetRawUrl();
-                urlString.Parameters.Remove("item");
-                urlString.Parameters.Remove("user");
-                urlString.Parameters.Remove("site");
-            }
-            WebUtil.Redirect(urlString.ToString(), false);
-        }
-
-        /// <summary>
-        /// Preforms redirect on 'item not found' condition.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void RedirectOnItemNotFound(string url)
-        {
-            this.PerformRedirect(url);
-        }
-
-        /// <summary>
-        /// Redirects on 'no access' condition.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void RedirectOnNoAccess(string url)
-        {
-            this.PerformRedirect(url);
-        }
-
-        /// <summary>
-        /// Redirects the on 'site access denied' condition.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void RedirectOnSiteAccessDenied(string url)
-        {
-            this.PerformRedirect(url);
-        }
-
-        /// <summary>
-        /// Redirects on 'layout not found' condition.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void RedirectOnLayoutNotFound(string url)
-        {
-            this.PerformRedirect(url);
-        }
-
-        /// <summary>
-        /// Redirects request to the specified URL.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        protected virtual void PerformRedirect(string url)
-        {
-            if (Settings.RequestErrors.UseServerSideRedirect)
-            {
-                HttpContext.Current.Server.Transfer(url);
-                return;
-            }
-            WebUtil.Redirect(url, false);
         }
 
         /// <summary>
